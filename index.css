@@ -3,8 +3,6 @@
    Brand colors: #ff0066 (Magenta) · #505050 (Gray)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 :root {
     --primary: #ff0066;
     --primary-hover: #cc0052;
@@ -459,7 +457,7 @@ section {
     background-size: cover;
     background-position: center;
     opacity: 0.2;
-    will-change: transform;
+    will-change: opacity;
 }
 
 .hero-glow {
@@ -595,6 +593,18 @@ section {
     bottom: 110px;
     right: 5%;
     z-index: 2;
+}
+
+/* Render below-the-fold sections on demand to improve mobile startup */
+#about,
+#partner,
+#tiendas,
+#beinsen,
+#servicio,
+#social,
+footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 700px;
 }
 
 .scroll-line {
@@ -1439,6 +1449,14 @@ footer {
 }
 
 @media (max-width: 968px) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    }
+
     section {
         padding: 80px 5%;
     }
@@ -1458,9 +1476,23 @@ footer {
         padding: 120px 5% 0;
     }
 
+    .hero-overlay {
+        opacity: 0.14;
+    }
+
+    .hero-glow {
+        display: none;
+    }
+
+    .hero-badge {
+        backdrop-filter: none;
+    }
+
     .hero-stats {
         position: relative;
         flex-wrap: wrap;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 
     .hero-stat {
@@ -1475,6 +1507,17 @@ footer {
 
     .scroll-indicator {
         display: none;
+    }
+
+    .reveal,
+    .reveal-up,
+    .delay-1,
+    .delay-2,
+    .delay-3 {
+        animation: none;
+        transition: none;
+        opacity: 1;
+        transform: none;
     }
 
     /* Trust bar */

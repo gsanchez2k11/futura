@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada — Futura Teck</title>
+    <meta name="description" content="La página que buscas no existe. Vuelve al inicio de Futura Teck.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #ff0066;
+            --primary-hover: #cc0052;
+            --dark: #0d0d0d;
+            --dark-2: #181818;
+            --dark-3: #242424;
+            --white: #ffffff;
+            --text-muted: rgba(255,255,255,0.5);
+            --border: rgba(255,255,255,0.08);
+            --radius: 12px;
+            --radius-sm: 6px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark-2);
+            color: var(--white);
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { transition: var(--transition); }
+
+        /* ── BACKGROUND ── */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 70% 60% at 20% 80%, rgba(255,0,102,0.18) 0%, transparent 65%),
+                radial-gradient(ellipse 50% 50% at 80% 20%, rgba(255,0,102,0.08) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            position: relative;
+            z-index: 10;
+            padding: 28px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo img { height: 40px; width: auto; }
+
+        .nav-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+        }
+
+        .nav-home:hover { color: var(--white); }
+
+        .nav-home svg { flex-shrink: 0; }
+
+        /* ── MAIN ── */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 5%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .error-container {
+            text-align: center;
+            max-width: 720px;
+            animation: fadeInUp 0.8s cubic-bezier(0.4,0,0.2,1) both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(32px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── 404 NUMBER ── */
+        .error-num {
+            position: relative;
+            display: inline-block;
+            font-size: clamp(7rem, 22vw, 16rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255,255,255,0.07);
+            margin-bottom: 0;
+            user-select: none;
+        }
+
+        .error-num::after {
+            content: '404';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, #ff6699 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: glowIn 1s 0.3s cubic-bezier(0.4,0,0.2,1) forwards;
+        }
+
+        @keyframes glowIn {
+            to { opacity: 1; }
+        }
+
+        /* Animated underline */
+        .error-line {
+            display: block;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            margin: -8px auto 40px;
+            width: 0;
+            animation: lineExpand 0.8s 0.7s ease forwards;
+        }
+
+        @keyframes lineExpand {
+            to { width: 60%; }
+        }
+
+        /* ── BADGE ── */
+        .error-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(12px);
+            padding: 7px 16px;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 28px;
+            animation: fadeInUp 0.6s 0.15s both;
+        }
+
+        .badge-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse 2.4s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(255,0,102,0.22); }
+            50%       { box-shadow: 0 0 0 7px rgba(255,0,102,0.05); }
+        }
+
+        /* ── COPY ── */
+        .error-title {
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 14px;
+            animation: fadeInUp 0.7s 0.25s both;
+        }
+
+        .error-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+            max-width: 480px;
+            margin: 0 auto 44px;
+            animation: fadeInUp 0.7s 0.35s both;
+        }
+
+        /* ── ACTIONS ── */
+        .error-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
+            animation: fadeInUp 0.7s 0.45s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 30px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(255,0,102,0.35);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: rgba(255,255,255,0.75);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.5);
+            color: var(--white);
+        }
+
+        /* ── QUICK LINKS ── */
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            animation: fadeInUp 0.7s 0.55s both;
+        }
+
+        .quick-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 18px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .quick-link:hover {
+            background: rgba(255,0,102,0.1);
+            border-color: rgba(255,0,102,0.3);
+            color: var(--white);
+        }
+
+        .quick-link-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--primary);
+            opacity: 0.6;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 24px 5%;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-copy {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.22);
+        }
+
+        .footer-phone {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-phone:hover { color: var(--primary); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .error-actions { flex-direction: column; align-items: center; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow" aria-hidden="true"></div>
+
+    <!-- NAV -->
+    <nav>
+        <a href="/" class="nav-logo" aria-label="Futura Teck — Inicio">
+            <picture>
+                <source srcset="assets/images/logo-horizontal-blanco.webp" type="image/webp">
+                <img src="assets/images/logo-horizontal-blanco.png" alt="Futura Teck">
+            </picture>
+        </a>
+        <a href="/" class="nav-home">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16" aria-hidden="true">
+                <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd"/>
+            </svg>
+            Volver al inicio
+        </a>
+    </nav>
+
+    <!-- MAIN -->
+    <main>
+        <div class="error-container">
+
+            <div class="error-badge">
+                <span class="badge-dot"></span>
+                Error 404 — Página no encontrada
+            </div>
+
+            <div class="error-num" aria-hidden="true">404</div>
+            <span class="error-line" aria-hidden="true"></span>
+
+            <h1 class="error-title">Esta página no existe</h1>
+            <p class="error-desc">
+                La URL que has introducido no corresponde a ninguna página de Futura Teck.
+                Puede que haya sido movida, eliminada o que haya un error tipográfico en la dirección.
+            </p>
+
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary">
+                    <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd"/>
+                    </svg>
+                    Ir al inicio
+                </a>
+                <a href="/#servicio" class="btn btn-ghost">
+                    <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clip-rule="evenodd"/>
+                    </svg>
+                    Contactar
+                </a>
+            </div>
+
+            <div class="quick-links" role="navigation" aria-label="Accesos rápidos">
+                <a href="/#about" class="quick-link"><span class="quick-link-dot" aria-hidden="true"></span>Empresa</a>
+                <a href="/#tiendas" class="quick-link"><span class="quick-link-dot" aria-hidden="true"></span>Tiendas</a>
+                <a href="/#beinsen" class="quick-link"><span class="quick-link-dot" aria-hidden="true"></span>Beinsen</a>
+                <a href="/#partner" class="quick-link"><span class="quick-link-dot" aria-hidden="true"></span>Epson Emerald</a>
+                <a href="/#servicio" class="quick-link"><span class="quick-link-dot" aria-hidden="true"></span>Servicio Técnico</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <span class="footer-copy">&copy; 2026 Futura Teck · Todos los derechos reservados</span>
+        <div class="footer-legal" style="display: flex; gap: 15px; font-size: 0.75rem; opacity: 0.6;">
+            <a href="aviso-legal.html" style="color: inherit; text-decoration: none;">Aviso Legal</a>
+            <a href="politica-privacidad.html" style="color: inherit; text-decoration: none;">Privacidad</a>
+            <a href="politica-cookies.html" style="color: inherit; text-decoration: none;">Cookies</a>
+        </div>
+        <a href="tel:+34968902300" class="footer-phone">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14" aria-hidden="true">
+                <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clip-rule="evenodd"/>
+            </svg>
+            +34 968 902 300
+        </a>
+    </footer>
+
+</body>
+</html>

@@ -1247,6 +1247,35 @@ footer {
     min-height: 108px;
 }
 
+.field-error {
+    border-color: #d92d20 !important;
+    background: #fff5f6 !important;
+    box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.1) !important;
+}
+
+.field-error-text {
+    display: block;
+    margin-top: 7px;
+    font-size: 0.78rem;
+    color: #b42318;
+    font-weight: 600;
+}
+
+.form-status {
+    min-height: 22px;
+    margin-top: 14px;
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.form-status.success {
+    color: #1a6b30;
+}
+
+.form-status.error {
+    color: #b42318;
+}
+
 /* ── SOCIAL ─────────────────────────────────────────────── */
 .social-section {
     background: var(--dark);

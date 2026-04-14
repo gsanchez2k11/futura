@@ -521,18 +521,20 @@
             <div class="contact-form reveal">
                 <h3>Contacta con nosotros</h3>
                 <p class="form-subtitle">Respuesta garantizada en menos de 24h laborables.</p>
-                <form id="contactForm" novalidate>
+                <form id="contactForm" novalidate data-endpoint="">
                     <div class="form-group">
                         <label for="cf-name">Nombre y Empresa</label>
-                        <input id="cf-name" type="text" placeholder="Ej: Juan Pérez · Impresiones Pro" required>
+                        <input id="cf-name" name="name" type="text" placeholder="Ej: Juan Pérez · Impresiones Pro" required
+                            minlength="3" maxlength="80" autocomplete="name">
                     </div>
                     <div class="form-group">
                         <label for="cf-email">Email de Contacto</label>
-                        <input id="cf-email" type="email" placeholder="ejemplo@empresa.com" required>
+                        <input id="cf-email" name="email" type="email" placeholder="ejemplo@empresa.com" required
+                            maxlength="120" autocomplete="email">
                     </div>
                     <div class="form-group">
                         <label for="cf-type">Tipo de Solicitud</label>
-                        <select id="cf-type" required>
+                        <select id="cf-type" name="requestType" required>
                             <option value="">Seleccione una opción</option>
                             <option value="tech">Soporte Técnico</option>
                             <option value="sales">Presupuesto de Equipos</option>
@@ -543,9 +545,11 @@
                     </div>
                     <div class="form-group">
                         <label for="cf-msg">Mensaje</label>
-                        <textarea id="cf-msg" rows="4" placeholder="Describa brevemente su necesidad..."></textarea>
+                        <textarea id="cf-msg" name="message" rows="4" placeholder="Describa brevemente su necesidad..."
+                            required minlength="20" maxlength="1200"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-full">Enviar Mensaje →</button>
+                    <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
                 </form>
             </div>
         </div>
@@ -651,12 +655,124 @@
         document.querySelectorAll('.mobile-link, .mobile-cta').forEach(l => l.addEventListener('click', closeMenu));
 
         // Contact form
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
+        const contactForm = document.getElementById('contactForm');
+        const formStatus = document.getElementById('formStatus');
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const fieldConfig = {
+            name: { message: 'Introduce tu nombre o empresa (mínimo 3 caracteres).' },
+            email: { message: 'Introduce un email válido.' },
+            requestType: { message: 'Selecciona un tipo de solicitud.' },
+            message: { message: 'El mensaje debe tener al menos 20 caracteres.' }
+        };
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        const setStatus = (text, type) => {
+            formStatus.textContent = text;
+            formStatus.className = `form-status ${type}`;
+        };
+
+        const setFieldError = (field, message) => {
+            field.classList.add('field-error');
+            let errorNode = field.parentElement.querySelector('.field-error-text');
+            if (!errorNode) {
+                errorNode = document.createElement('small');
+                errorNode.className = 'field-error-text';
+                field.parentElement.appendChild(errorNode);
+            }
+            errorNode.textContent = message;
+        };
+
+        const clearFieldError = (field) => {
+            field.classList.remove('field-error');
+            const errorNode = field.parentElement.querySelector('.field-error-text');
+            if (errorNode) errorNode.remove();
+        };
+
+        const validateField = (field) => {
+            const key = field.name;
+            const value = field.value.trim();
+
+            if (!value) {
+                setFieldError(field, fieldConfig[key].message);
+                return false;
+            }
+
+            if (key === 'email' && !emailRegex.test(value)) {
+                setFieldError(field, 'El email no tiene un formato válido.');
+                return false;
+            }
+
+            if (key === 'message' && value.length < 20) {
+                setFieldError(field, fieldConfig[key].message);
+                return false;
+            }
+
+            clearFieldError(field);
+            return true;
+        };
+
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.textContent = '✓ Mensaje enviado — le contactaremos pronto';
-            btn.style.background = '#1a6b30';
-            btn.disabled = true;
+            setStatus('', '');
+
+            const fields = Array.from(contactForm.querySelectorAll('input[name], select[name], textarea[name]'));
+            const isValid = fields.every(validateField);
+
+            if (!isValid) {
+                setStatus('Revisa los campos marcados en rojo.', 'error');
+                return;
+            }
+
+            const formData = new FormData(contactForm);
+            const payload = {
+                name: formData.get('name').toString().trim(),
+                email: formData.get('email').toString().trim(),
+                requestType: formData.get('requestType').toString().trim(),
+                message: formData.get('message').toString().trim()
+            };
+
+            submitButton.disabled = true;
+            submitButton.textContent = 'Enviando...';
+
+            const customEndpoint = contactForm.dataset.endpoint ? contactForm.dataset.endpoint.trim() : '';
+            const endpoint = customEndpoint || 'https://formsubmit.co/ajax/alberto@futura.es';
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ...payload,
+                        _subject: `Nueva consulta web (${payload.requestType})`,
+                        _template: 'table',
+                        _captcha: 'false'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('No se pudo enviar la solicitud.');
+                }
+
+                setStatus('Mensaje enviado correctamente. Te contactaremos en menos de 24h.', 'success');
+                contactForm.reset();
+            } catch (error) {
+                setStatus('No pudimos enviar el formulario. Inténtalo de nuevo o llámanos al +34 968 902 300.', 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Enviar Mensaje →';
+            }
+        });
+
+        contactForm.querySelectorAll('input[name], select[name], textarea[name]').forEach((field) => {
+            field.addEventListener('input', () => {
+                if (field.classList.contains('field-error')) {
+                    validateField(field);
+                }
+            });
         });
     </script>
 </body>

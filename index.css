@@ -3,8 +3,6 @@
    Brand colors: #ff0066 (Magenta) · #505050 (Gray)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 :root {
     --primary: #ff0066;
     --primary-hover: #cc0052;
@@ -459,7 +457,7 @@ section {
     background-size: cover;
     background-position: center;
     opacity: 0.2;
-    will-change: transform;
+    will-change: opacity;
 }
 
 .hero-glow {
@@ -595,6 +593,18 @@ section {
     bottom: 110px;
     right: 5%;
     z-index: 2;
+}
+
+/* Render below-the-fold sections on demand to improve mobile startup */
+#about,
+#partner,
+#tiendas,
+#beinsen,
+#servicio,
+#social,
+footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 700px;
 }
 
 .scroll-line {
@@ -1237,6 +1247,35 @@ section {
     min-height: 108px;
 }
 
+.field-error {
+    border-color: #d92d20 !important;
+    background: #fff5f6 !important;
+    box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.1) !important;
+}
+
+.field-error-text {
+    display: block;
+    margin-top: 7px;
+    font-size: 0.78rem;
+    color: #b42318;
+    font-weight: 600;
+}
+
+.form-status {
+    min-height: 22px;
+    margin-top: 14px;
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.form-status.success {
+    color: #1a6b30;
+}
+
+.form-status.error {
+    color: #b42318;
+}
+
 /* ── SOCIAL ─────────────────────────────────────────────── */
 .social-section {
     background: var(--dark);
@@ -1439,6 +1478,14 @@ footer {
 }
 
 @media (max-width: 968px) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    }
+
     section {
         padding: 80px 5%;
     }
@@ -1458,9 +1505,23 @@ footer {
         padding: 120px 5% 0;
     }
 
+    .hero-overlay {
+        opacity: 0.14;
+    }
+
+    .hero-glow {
+        display: none;
+    }
+
+    .hero-badge {
+        backdrop-filter: none;
+    }
+
     .hero-stats {
         position: relative;
         flex-wrap: wrap;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 
     .hero-stat {
@@ -1475,6 +1536,17 @@ footer {
 
     .scroll-indicator {
         display: none;
+    }
+
+    .reveal,
+    .reveal-up,
+    .delay-1,
+    .delay-2,
+    .delay-3 {
+        animation: none;
+        transition: none;
+        opacity: 1;
+        transform: none;
     }
 
     /* Trust bar */

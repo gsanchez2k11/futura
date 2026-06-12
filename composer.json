@@ -1,0 +1,8 @@
+{
+    "name": "futura/web-contacto",
+    "description": "Endpoint de contacto de futura.es (PHPMailer + SMTP Gmail)",
+    "require": {
+        "php": ">=7.4",
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

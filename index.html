@@ -521,7 +521,7 @@
             <div class="contact-form reveal">
                 <h3>Contacta con nosotros</h3>
                 <p class="form-subtitle">Respuesta garantizada en menos de 24h laborables.</p>
-                <form id="contactForm" novalidate data-endpoint="">
+                <form id="contactForm" action="enviar.php" method="POST" novalidate data-endpoint="">
                     <div class="form-group">
                         <label for="cf-name">Nombre y Empresa</label>
                         <input id="cf-name" name="name" type="text" placeholder="Ej: Juan Pérez · Impresiones Pro" required
@@ -548,6 +548,9 @@
                         <textarea id="cf-msg" name="message" rows="4" placeholder="Describa brevemente su necesidad..."
                             required minlength="20" maxlength="1200"></textarea>
                     </div>
+                    <!-- Honeypot anti-spam: oculto para humanos, lo rellenan los bots -->
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"
+                        style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
                     <button type="submit" class="btn btn-primary btn-full">Enviar Mensaje →</button>
                     <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
                 </form>
@@ -716,7 +719,7 @@
             e.preventDefault();
             setStatus('', '');
 
-            const fields = Array.from(contactForm.querySelectorAll('input[name], select[name], textarea[name]'));
+            const fields = Array.from(contactForm.querySelectorAll('input[name]:not([name="website"]), select[name], textarea[name]'));
             const isValid = fields.every(validateField);
 
             if (!isValid) {
@@ -724,20 +727,15 @@
                 return;
             }
 
-            const requestType = contactForm.querySelector('[name="requestType"]').value.trim();
-
-            // Enviamos como FormData (igual que un formulario normal): es una petición
-            // "simple", sin preflight CORS, y es el modo más compatible con FormSubmit.
+            // Enviamos como FormData a nuestro propio endpoint (mismo dominio):
+            // no lo bloquean adblockers/Brave y la petición es "simple" (sin preflight).
             const payload = new FormData(contactForm);
-            payload.append('_subject', `Nueva consulta web (${requestType})`);
-            payload.append('_template', 'table');
-            payload.append('_captcha', 'false');
 
             submitButton.disabled = true;
             submitButton.textContent = 'Enviando...';
 
             const customEndpoint = contactForm.dataset.endpoint ? contactForm.dataset.endpoint.trim() : '';
-            const endpoint = customEndpoint || 'https://formsubmit.co/ajax/web@futura.es';
+            const endpoint = customEndpoint || 'enviar.php';
 
             try {
                 const response = await fetch(endpoint, {
@@ -746,8 +744,8 @@
                     body: payload
                 });
 
-                // FormSubmit devuelve HTTP 200 incluso cuando rechaza el envío
-                // (p. ej. email sin activar): hay que comprobar el campo "success".
+                // El endpoint responde con {"success":"true"|"false"}: comprobamos
+                // ese campo, no solo el código HTTP.
                 let result = {};
                 try { result = await response.json(); } catch (_) { result = {}; }
                 const ok = response.ok && String(result.success) === 'true';
@@ -766,7 +764,7 @@
             }
         });
 
-        contactForm.querySelectorAll('input[name], select[name], textarea[name]').forEach((field) => {
+        contactForm.querySelectorAll('input[name]:not([name="website"]), select[name], textarea[name]').forEach((field) => {
             field.addEventListener('input', () => {
                 if (field.classList.contains('field-error')) {
                     validateField(field);

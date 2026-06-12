@@ -1,0 +1,5 @@
+# Credenciales del endpoint de contacto (NUNCA subir a git)
+config.php
+
+# Dependencias de Composer (se instalan en el servidor)
+/vendor/

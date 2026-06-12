@@ -724,13 +724,14 @@
                 return;
             }
 
-            const formData = new FormData(contactForm);
-            const payload = {
-                name: formData.get('name').toString().trim(),
-                email: formData.get('email').toString().trim(),
-                requestType: formData.get('requestType').toString().trim(),
-                message: formData.get('message').toString().trim()
-            };
+            const requestType = contactForm.querySelector('[name="requestType"]').value.trim();
+
+            // Enviamos como FormData (igual que un formulario normal): es una petición
+            // "simple", sin preflight CORS, y es el modo más compatible con FormSubmit.
+            const payload = new FormData(contactForm);
+            payload.append('_subject', `Nueva consulta web (${requestType})`);
+            payload.append('_template', 'table');
+            payload.append('_captcha', 'false');
 
             submitButton.disabled = true;
             submitButton.textContent = 'Enviando...';
@@ -741,20 +742,18 @@
             try {
                 const response = await fetch(endpoint, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ...payload,
-                        _subject: `Nueva consulta web (${payload.requestType})`,
-                        _template: 'table',
-                        _captcha: 'false'
-                    })
+                    headers: { Accept: 'application/json' },
+                    body: payload
                 });
 
-                if (!response.ok) {
-                    throw new Error('No se pudo enviar la solicitud.');
+                // FormSubmit devuelve HTTP 200 incluso cuando rechaza el envío
+                // (p. ej. email sin activar): hay que comprobar el campo "success".
+                let result = {};
+                try { result = await response.json(); } catch (_) { result = {}; }
+                const ok = response.ok && String(result.success) === 'true';
+
+                if (!ok) {
+                    throw new Error(result.message || 'No se pudo enviar la solicitud.');
                 }
 
                 setStatus('Mensaje enviado correctamente. Te contactaremos en menos de 24h.', 'success');
